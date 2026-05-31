@@ -1,12 +1,9 @@
 # ════════════════════════════════════════════════════════════
-# SLOPGRAPH Backend — Phase 0 dependencies
-# These are the only deps needed for the Phase 0 skeleton
-# (API server + health/scan stub + CORS + config + tests).
-# Heavy ML/graph deps are added in Phase 1+ (see requirements-ml.txt).
-# Versions left unpinned-to-minimum to stay compatible with the
-# installed interpreter (Python 3.14) which needs recent wheels.
+# SLOPGRAPH Backend — all dependencies (API + ML + Graph)
+# Used by Render, Railway, and local dev.
 # ════════════════════════════════════════════════════════════
 
+# ── API server ──
 fastapi>=0.115
 uvicorn[standard]>=0.34
 pydantic>=2.10
@@ -14,6 +11,12 @@ pydantic-settings>=2.7
 python-dotenv>=1.0
 requests>=2.32
 
+# ── Graph + ML (Phase 1+) ──
+networkx>=3.4
+scikit-learn>=1.6
+numpy>=2.2
+scipy>=1.15
+
 # ── Testing ──
 pytest>=8.3
-httpx>=0.28          # required by FastAPI TestClient
+httpx>=0.28

@@ -1,8 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Enables standalone output for Docker deployment (copies only required files).
-  output: "standalone",
+  // NOTE: "standalone" output is for Docker only.
+  // For Vercel deployment, this must be removed/commented out.
+  // output: "standalone",
 };
 
 export default nextConfig;
