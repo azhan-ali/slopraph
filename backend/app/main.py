@@ -210,7 +210,7 @@ async def scan(payload: ScanRequest) -> ScanResponse | JSONResponse:
                 result = _RA._load_demo_fixture(original_url=url, max_comments=payload.max_comments)
             except Exception as inner:
                 logger.error("Fixture fallback also failed: %s", inner)
-                return _error(502, "fetch_failed", f"Reddit is blocking this server's IP. Demo fixture also unavailable: {inner}")
+                return _error(502, "fetch_failed", f"Reddit blocked this server's IP. Demo fixture unavailable: {inner}")
         else:
             return _error(502, "fetch_failed", str(exc))
 
