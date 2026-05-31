@@ -1,0 +1,95 @@
+[
+  {
+    "kind": "Listing",
+    "data": {
+      "children": [
+        {
+          "kind": "t3",
+          "data": {
+            "id": "bot001",
+            "title": "Check out this amazing product!",
+            "selftext": "I found this incredible deal you should all look at.",
+            "author": "spammer_op",
+            "subreddit": "deals",
+            "created_utc": 1700000000,
+            "score": 5
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "Listing",
+    "data": {
+      "children": [
+        {
+          "kind": "t1",
+          "data": {
+            "id": "b1",
+            "author": "bot_alice",
+            "body": "Totally agree, this is a great tapestry of opportunities to delve into.",
+            "created_utc": 1700000010,
+            "score": 1,
+            "replies": {
+              "kind": "Listing",
+              "data": {
+                "children": [
+                  {
+                    "kind": "t1",
+                    "data": {
+                      "id": "b1a",
+                      "author": "bot_bob",
+                      "body": "Totally agree, this is a great tapestry of opportunities to delve into.",
+                      "created_utc": 1700000020,
+                      "score": 1,
+                      "replies": ""
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "kind": "t1",
+          "data": {
+            "id": "b2",
+            "author": "bot_carol",
+            "body": "Totally agree, this is a great tapestry of opportunities to delve into.",
+            "created_utc": 1700000030,
+            "score": 1,
+            "replies": {
+              "kind": "Listing",
+              "data": {
+                "children": [
+                  {
+                    "kind": "t1",
+                    "data": {
+                      "id": "b2a",
+                      "author": "bot_dave",
+                      "body": "Totally agree, this is a great tapestry of opportunities to delve into.",
+                      "created_utc": 1700000040,
+                      "score": 1,
+                      "replies": ""
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "kind": "t1",
+          "data": {
+            "id": "b3",
+            "author": "bot_eve",
+            "body": "Totally agree, this is a great tapestry of opportunities to delve into.",
+            "created_utc": 1700000050,
+            "score": 1,
+            "replies": ""
+          }
+        }
+      ]
+    }
+  }
+]

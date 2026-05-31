@@ -1,0 +1,82 @@
+[
+  {
+    "kind": "Listing",
+    "data": {
+      "children": [
+        {
+          "kind": "t3",
+          "data": {
+            "id": "abc123",
+            "title": "Is the conversation real?",
+            "selftext": "Looking at this thread, half the replies feel templated.",
+            "author": "alice",
+            "subreddit": "TestSub",
+            "created_utc": 1700000000,
+            "score": 142
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "Listing",
+    "data": {
+      "children": [
+        {
+          "kind": "t1",
+          "data": {
+            "id": "c1",
+            "author": "bob",
+            "body": "Great question! Reply latency might be the giveaway.",
+            "created_utc": 1700000060,
+            "score": 12,
+            "replies": {
+              "kind": "Listing",
+              "data": {
+                "children": [
+                  {
+                    "kind": "t1",
+                    "data": {
+                      "id": "c1a",
+                      "author": "carol",
+                      "body": "Totally agree.",
+                      "created_utc": 1700000120,
+                      "score": 3,
+                      "replies": ""
+                    }
+                  },
+                  {
+                    "kind": "t1",
+                    "data": {
+                      "id": "c1b",
+                      "author": "[deleted]",
+                      "body": "[removed]",
+                      "created_utc": 1700000180,
+                      "score": -2,
+                      "replies": ""
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "kind": "t1",
+          "data": {
+            "id": "c2",
+            "author": "dave",
+            "body": "Vocabulary echo is a stronger signal in my experience.",
+            "created_utc": 1700000200,
+            "score": 8,
+            "replies": ""
+          }
+        },
+        {
+          "kind": "more",
+          "data": { "id": "abc", "children": ["x", "y"] }
+        }
+      ]
+    }
+  }
+]

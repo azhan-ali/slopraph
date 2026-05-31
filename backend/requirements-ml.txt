@@ -1,0 +1,12 @@
+# ════════════════════════════════════════════════════════════
+# SLOPGRAPH Backend — Phase 1+ (ML / Graph) dependencies
+# Install alongside requirements.txt when Phase 1 begins:
+#     pip install -r requirements.txt -r requirements-ml.txt
+# Kept separate so the Phase 0 skeleton stays lightweight and
+# installs reliably on any machine.
+# ════════════════════════════════════════════════════════════
+
+networkx>=3.4        # conversation graph
+scikit-learn>=1.6    # TF-IDF, clustering (vocab echo matrix)
+numpy>=2.2
+scipy>=1.15          # latency distribution fitting

@@ -1,0 +1,65 @@
+{
+  "product": {
+    "title": "Wireless Noise-Cancelling Headphones — Pro Studio Edition",
+    "asin": "B0EXAMPLE1"
+  },
+  "fetched_at": 1735689600.0,
+  "reviews": [
+    {
+      "id": "rev1",
+      "author": "HappyShopper2026",
+      "rating": 5,
+      "timestamp": 1735689610.0,
+      "text": "Absolutely amazing product, this changed my listening experience forever, highly recommend to everyone!",
+      "helpful_votes": 1
+    },
+    {
+      "id": "rev2",
+      "author": "BestDealsFinder",
+      "rating": 5,
+      "timestamp": 1735689618.0,
+      "text": "Absolutely amazing product, this changed my listening experience forever, highly recommend to everyone!",
+      "helpful_votes": 1
+    },
+    {
+      "id": "rev3",
+      "author": "ValueHunter99",
+      "rating": 5,
+      "timestamp": 1735689625.0,
+      "text": "Absolutely amazing product, this changed my listening experience forever, highly recommend to everyone!",
+      "helpful_votes": 0
+    },
+    {
+      "id": "rev4",
+      "author": "QualityReviews",
+      "rating": 5,
+      "timestamp": 1735689633.0,
+      "text": "Totally agree, this is a great tapestry of sound quality, highly recommend to everyone!",
+      "helpful_votes": 1
+    },
+    {
+      "id": "rev5",
+      "author": "SoundFanatic",
+      "rating": 5,
+      "timestamp": 1735689641.0,
+      "text": "Absolutely amazing product, this changed my listening experience forever, highly recommend to everyone!",
+      "helpful_votes": 0
+    },
+    {
+      "id": "rev6",
+      "author": "honest_mike",
+      "rating": 2,
+      "timestamp": 1736000000.0,
+      "text": "Disappointed. The noise cancelling is mediocre and the left earcup started crackling after two weeks. Also suspicious how many identical 5-star reviews were posted on the same day.",
+      "helpful_votes": 88
+    },
+    {
+      "id": "rev7",
+      "author": "audiophile_sara",
+      "rating": 3,
+      "timestamp": 1736200000.0,
+      "text": "Decent for the price but the bass is muddy and the app is buggy. Not worth the hype the other reviews are claiming.",
+      "helpful_votes": 41
+    }
+  ]
+}
