@@ -74,9 +74,14 @@ app = FastAPI(
 )
 
 # ── CORS ──────────────────────────────────────────────────────────────────
+# Allow:
+#   1. Explicit origins from CORS_ORIGINS env var (localhost dev URLs by default)
+#   2. Any *.vercel.app preview/production deployment via regex
+# This means the frontend on Vercel "just works" without manual Render env config.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
+    allow_origin_regex=r"https://[a-z0-9\-]+\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
