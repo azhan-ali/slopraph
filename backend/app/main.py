@@ -199,6 +199,20 @@ async def scan(payload: ScanRequest) -> ScanResponse | JSONResponse:
         return _error(502, "fetch_failed", str(exc))
     except AdapterParseError as exc:
         return _error(502, "parse_failed", str(exc))
+    except Exception as exc:
+        # Broad catch for unexpected network failures (e.g. Reddit dropping
+        # the connection at the TCP level on cloud IPs). For Reddit, fall back
+        # to the demo fixture so the user always gets a result.
+        logger.warning("Unexpected error fetching %s: %s — attempting fixture fallback", url, exc)
+        if platform is Platform.REDDIT:
+            from app.adapters.reddit_adapter import RedditAdapter as _RA
+            try:
+                result = _RA._load_demo_fixture(original_url=url, max_comments=payload.max_comments)
+            except Exception as inner:
+                logger.error("Fixture fallback also failed: %s", inner)
+                return _error(502, "fetch_failed", f"Reddit is blocking this server's IP. Demo fixture also unavailable: {inner}")
+        else:
+            return _error(502, "fetch_failed", str(exc))
 
     # ── Phase 2: build conversation graph + compute topology metrics ──
     G = build_graph(result.comments)

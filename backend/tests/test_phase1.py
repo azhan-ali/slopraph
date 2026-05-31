@@ -232,17 +232,21 @@ def test_fetch_blocked_codes_fall_back_to_fixture(code):
 
 
 def test_fetch_handles_timeout():
+    """Timeout → fallback to demo fixture (not a hard error on cloud deployments)."""
     session = _mock_session(raises=requests.Timeout("slow"))
     adapter = RedditAdapter(session=session)
-    with pytest.raises(AdapterFetchError, match="timed out"):
-        adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
+    result = adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
+    assert result.platform.value == "reddit"
+    assert len(result.comments) > 0
 
 
 def test_fetch_handles_connection_error():
+    """Connection error → fallback to demo fixture (not a hard error on cloud deployments)."""
     session = _mock_session(raises=requests.ConnectionError("unreachable"))
     adapter = RedditAdapter(session=session)
-    with pytest.raises(AdapterFetchError, match="failed"):
-        adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
+    result = adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
+    assert result.platform.value == "reddit"
+    assert len(result.comments) > 0
 
 
 def test_fetch_handles_invalid_json():
