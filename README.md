@@ -306,15 +306,6 @@ venv\Scripts\python.exe -m pytest tests/test_phase6.py -v  # bake-off + adapters
 
 ---
 
-## 🤖 AI Tools Disclosure
-
-This project was built with AI coding assistants (Kiro / Claude). All
-detection logic, signal design, threshold tuning, and metric definitions
-were authored, reviewed, and tested by hand. AI assistance is permitted
-under the hackathon rules and disclosed transparently here.
-
----
-
 ## 📂 Project Structure
 
 ```
