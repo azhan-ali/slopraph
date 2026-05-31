@@ -207,9 +207,6 @@ def test_fetch_success_end_to_end(reddit_payload):
     "code,error_substr",
     [
         (404, "not found"),
-        (403, "blocked"),
-        (429, "rate-limited"),
-        (500, "server error"),
         (418, "Unexpected status"),
     ],
 )
@@ -218,6 +215,20 @@ def test_fetch_maps_http_errors(code, error_substr):
     adapter = RedditAdapter(session=session)
     with pytest.raises(AdapterFetchError, match=error_substr):
         adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
+
+
+@pytest.mark.parametrize("code", [403, 429, 500])
+def test_fetch_blocked_codes_fall_back_to_fixture(code):
+    """403/429/500 from Reddit → graceful fallback to demo fixture (not a hard error).
+    This is the production behaviour: Render's datacenter IPs are often blocked
+    by Reddit, so we serve the fixture rather than showing an error to the user.
+    """
+    session = _mock_session(status_code=code)
+    adapter = RedditAdapter(session=session)
+    # Should NOT raise — should return the demo fixture instead.
+    result = adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
+    assert result.platform.value == "reddit"
+    assert len(result.comments) > 0
 
 
 def test_fetch_handles_timeout():

@@ -86,7 +86,20 @@ class RedditAdapter(BaseAdapter):
             return self._load_demo_fixture(original_url=url, max_comments=max_comments)
 
         json_url = self._build_json_url(thread_id)
-        payload = self._fetch_json(json_url)
+        try:
+            payload = self._fetch_json(json_url)
+        except AdapterFetchError as exc:
+            # Reddit blocks many datacenter/cloud IPs (403/429/502).
+            # Fall back to the demo fixture so the UI still shows a meaningful
+            # result rather than a hard error — and log clearly what happened.
+            err_str = str(exc).lower()
+            if any(k in err_str for k in ("403", "blocked", "429", "rate-limit", "502", "server error")):
+                logger.warning(
+                    "Reddit blocked the request (%s) — serving demo fixture for %s",
+                    exc, thread_id,
+                )
+                return self._load_demo_fixture(original_url=url, max_comments=max_comments)
+            raise
         return self._parse_thread_json(payload, original_url=url, max_comments=max_comments)
 
     @staticmethod
