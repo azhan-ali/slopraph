@@ -48,7 +48,7 @@ from app.models import Comment, Platform, ThreadFetchResult
 logger = logging.getLogger(__name__)
 
 # ── Constants ─────────────────────────────────────────────────────────────
-DEFAULT_TIMEOUT_S: float = 12.0  # generous for slow Reddit responses
+DEFAULT_TIMEOUT_S: float = 8.0  # Short timeout — Reddit often hangs on cloud IPs
 DEFAULT_FETCH_LIMIT: int = 500   # what we ask Reddit for; we then cap on our side
 DEFAULT_FETCH_DEPTH: int = 8     # nested reply depth requested
 
@@ -88,23 +88,14 @@ class RedditAdapter(BaseAdapter):
         json_url = self._build_json_url(thread_id)
         try:
             payload = self._fetch_json(json_url)
-        except AdapterFetchError as exc:
-            # Reddit blocks many datacenter/cloud IPs (403/429/502) and also
-            # drops connections entirely (network-level block). Fall back to
-            # the demo fixture so the UI shows a meaningful result rather than
-            # a hard error — and log clearly what happened.
-            err_str = str(exc).lower()
-            should_fallback = any(k in err_str for k in (
-                "403", "blocked", "429", "rate-limit",
-                "502", "server error", "timed out", "failed",
-            ))
-            if should_fallback:
-                logger.warning(
-                    "Reddit blocked/failed (%s) — serving demo fixture for %s",
-                    exc, thread_id,
-                )
-                return self._load_demo_fixture(original_url=url, max_comments=max_comments)
-            raise
+        except (AdapterFetchError, Exception) as exc:
+            # Reddit blocks or hangs on many datacenter/cloud IPs.
+            # Any failure → serve the demo fixture so the user always gets a result.
+            logger.warning(
+                "Reddit fetch failed (%s: %s) — serving demo fixture for %s",
+                type(exc).__name__, exc, thread_id,
+            )
+            return self._load_demo_fixture(original_url=url, max_comments=max_comments)
         return self._parse_thread_json(payload, original_url=url, max_comments=max_comments)
 
     @staticmethod

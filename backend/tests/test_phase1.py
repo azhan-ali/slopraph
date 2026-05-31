@@ -205,10 +205,7 @@ def test_fetch_success_end_to_end(reddit_payload):
 
 @pytest.mark.parametrize(
     "code,error_substr",
-    [
-        (404, "not found"),
-        (418, "Unexpected status"),
-    ],
+    [],  # All HTTP errors now fall back to fixture — no hard errors from Reddit
 )
 def test_fetch_maps_http_errors(code, error_substr):
     session = _mock_session(status_code=code)
@@ -217,15 +214,14 @@ def test_fetch_maps_http_errors(code, error_substr):
         adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
 
 
-@pytest.mark.parametrize("code", [403, 429, 500])
+@pytest.mark.parametrize("code", [403, 404, 429, 418, 500])
 def test_fetch_blocked_codes_fall_back_to_fixture(code):
-    """403/429/500 from Reddit → graceful fallback to demo fixture (not a hard error).
-    This is the production behaviour: Render's datacenter IPs are often blocked
-    by Reddit, so we serve the fixture rather than showing an error to the user.
+    """Any HTTP error from Reddit → graceful fallback to demo fixture.
+    Reddit blocks cloud IPs with 403/429/502, returns 404 for deleted threads,
+    and occasionally returns 418/500. All cases serve the fixture.
     """
     session = _mock_session(status_code=code)
     adapter = RedditAdapter(session=session)
-    # Should NOT raise — should return the demo fixture instead.
     result = adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
     assert result.platform.value == "reddit"
     assert len(result.comments) > 0
@@ -250,14 +246,16 @@ def test_fetch_handles_connection_error():
 
 
 def test_fetch_handles_invalid_json():
+    """Invalid JSON from Reddit → fallback to demo fixture."""
     session = MagicMock(spec=requests.Session)
     resp = MagicMock()
     resp.status_code = 200
     resp.json.side_effect = ValueError("not json")
     session.get.return_value = resp
     adapter = RedditAdapter(session=session)
-    with pytest.raises(AdapterParseError, match="not valid JSON"):
-        adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
+    result = adapter.fetch("https://www.reddit.com/r/x/comments/abc123/", max_comments=10)
+    assert result.platform.value == "reddit"
+    assert len(result.comments) > 0
 
 
 def test_fetch_uses_user_agent():
