@@ -80,78 +80,120 @@ export default function ScanSection() {
   }
 
   return (
-    <section id="scan" className="relative py-20 px-6 max-w-6xl mx-auto">
-      <SectionHeader
-        eyebrow="Live demo"
-        title={
-          <>
-            Try it on a <span className="text-gradient-brand">real thread</span>
-          </>
-        }
-        sub="Paste any supported URL. We'll fetch the thread, normalise its structure, and show you the conversation graph."
+    <section id="scan" className="relative py-24 px-6 max-w-6xl mx-auto">
+      {/* Section scrim */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none rounded-3xl"
+        style={{
+          background:
+            "radial-gradient(ellipse 85% 75% at 50% 50%, rgba(7,7,13,0.82) 0%, rgba(7,7,13,0.55) 65%, transparent 100%)",
+        }}
       />
 
-      <div className="mt-12 glass-card p-6 sm:p-8">
-        <form onSubmit={handleScan} className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <input
-              ref={inputRef}
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://www.reddit.com/r/…"
-              aria-label="Thread URL to scan"
-              className="input-glass flex-1"
-            />
-            <button
-              type="submit"
-              disabled={scan.status === "loading"}
-              className="btn-primary whitespace-nowrap min-w-[140px]"
+      <div className="relative">
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <p className="text-xs uppercase tracking-[0.3em] text-[var(--brand)] mb-4 font-semibold">
+            Live Demo
+          </p>
+          <h2 className="font-display font-bold text-4xl sm:text-5xl text-white tracking-tight leading-tight mb-4">
+            Try it on a{" "}
+            <span
+              style={{
+                background: "linear-gradient(135deg, #ef4444, #ff8a8a)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
             >
-              {scan.status === "loading" ? (
-                <>
-                  <Spinner />
-                  Scanning
-                </>
-              ) : (
-                <>
-                  Scan
-                  <svg
-                    className="w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
+              real thread
+            </span>
+          </h2>
+          <p className="text-white/70 text-base leading-relaxed">
+            Paste any supported URL. We&apos;ll fetch the thread, normalise its
+            structure, and show you the conversation graph.
+          </p>
+        </div>
+
+        {/* Scan form — solid dark card */}
+        <div
+          className="rounded-2xl p-px mb-6"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(239,68,68,0.4), rgba(168,85,247,0.2) 50%, rgba(255,255,255,0.06))",
+          }}
+        >
+          <div
+            className="rounded-2xl p-6 sm:p-8"
+            style={{
+              background: "rgba(10, 10, 20, 0.95)",
+              backdropFilter: "blur(32px)",
+            }}
+          >
+            <form onSubmit={handleScan} className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input
+                  ref={inputRef}
+                  type="url"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  placeholder="https://www.reddit.com/r/…"
+                  aria-label="Thread URL to scan"
+                  className="input-glass flex-1"
+                />
+                <button
+                  type="submit"
+                  disabled={scan.status === "loading"}
+                  className="btn-primary whitespace-nowrap min-w-[140px]"
+                >
+                  {scan.status === "loading" ? (
+                    <>
+                      <Spinner />
+                      Scanning
+                    </>
+                  ) : (
+                    <>
+                      Scan
+                      <svg
+                        className="w-4 h-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
+                        <path d="M5 12h14M13 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Example chips */}
+              <div className="flex flex-wrap gap-2 items-center">
+                <span className="text-xs text-white/40 mr-1 font-medium">Try:</span>
+                {EXAMPLES.map((ex) => (
+                  <button
+                    key={ex.url}
+                    type="button"
+                    onClick={() => fillExample(ex.url)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white/70 border border-white/10 bg-white/5 hover:bg-white/10 hover:text-white hover:border-white/20 transition-all"
                   >
-                    <path d="M5 12h14M13 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </>
-              )}
-            </button>
+                    <span aria-hidden="true">{ex.icon}</span>
+                    {ex.label}
+                  </button>
+                ))}
+              </div>
+            </form>
           </div>
+        </div>
 
-          <div className="flex flex-wrap gap-2 items-center">
-            <span className="text-xs text-[var(--fg-dim)] mr-1">Try:</span>
-            {EXAMPLES.map((ex) => (
-              <button
-                key={ex.url}
-                type="button"
-                onClick={() => fillExample(ex.url)}
-                className="btn-ghost"
-              >
-                <span aria-hidden="true">{ex.icon}</span>
-                {ex.label}
-              </button>
-            ))}
-          </div>
-        </form>
-      </div>
-
-      {/* Result area */}
-      <div className="mt-6">
-        {scan.status === "loading" && <LoadingPanel />}
-        {scan.status === "error" && <ErrorPanel message={scan.message} />}
-        {scan.status === "success" && <ResultPanel result={scan.result} />}
+        {/* Result area */}
+        <div className="mt-4">
+          {scan.status === "loading" && <LoadingPanel />}
+          {scan.status === "error" && <ErrorPanel message={scan.message} />}
+          {scan.status === "success" && <ResultPanel result={scan.result} />}
+        </div>
       </div>
     </section>
   );
