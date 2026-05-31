@@ -12,7 +12,7 @@
  * presentation only — no business logic about *what* counts as slop.
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { scanThread, type Comment, type GraphMetrics, type GraphNode, type ScanResponse, type SignalScores } from "@/lib/api";
 import { SectionHeader } from "./Features";
 import ConversationGraph from "./ConversationGraph";
@@ -214,37 +214,88 @@ function Spinner() {
 }
 
 function LoadingPanel() {
+  const [elapsed, setElapsed] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setElapsed((e) => e + 1), 1000);
+    return () => clearInterval(t);
+  }, []);
+
+  // Progressive messaging — keeps users informed during cold start.
+  let message = "Fetching thread and normalising comments…";
+  let hint: string | null = null;
+
+  if (elapsed >= 8 && elapsed < 25) {
+    message = "Running detection signals — latency, vocab echo, consensus…";
+  } else if (elapsed >= 25) {
+    message = "Backend is waking up from sleep — this can take ~45s on free tier.";
+    hint = "Hang tight, almost there. Future scans will be instant.";
+  }
+
   return (
-    <div className="glass-card p-12 text-center">
-      <div className="w-10 h-10 mx-auto mb-4 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
-      <p className="text-sm text-[var(--fg-muted)]">
-        Fetching thread and normalising comments…
+    <div
+      className="rounded-2xl p-12 text-center"
+      style={{
+        background: "rgba(10, 10, 20, 0.92)",
+        backdropFilter: "blur(24px)",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+      }}
+    >
+      <div className="w-12 h-12 mx-auto mb-5 border-2 border-[var(--brand)] border-t-transparent rounded-full animate-spin" />
+      <p className="text-sm text-white/80 font-medium">{message}</p>
+      {hint && (
+        <p className="text-xs text-white/50 mt-2">{hint}</p>
+      )}
+      <p className="text-[10px] text-white/30 mt-4 font-mono">
+        elapsed {elapsed}s
       </p>
     </div>
   );
 }
 
 function ErrorPanel({ message }: { message: string }) {
+  const isTimeout = message.toLowerCase().includes("timeout") || message.toLowerCase().includes("timed out");
+  const isNetwork = message.toLowerCase().includes("network");
+
   return (
     <div
       role="alert"
-      className="glass-card p-6 border-red-500/30 bg-red-950/20"
+      className="rounded-2xl p-6"
+      style={{
+        background: "rgba(40, 10, 10, 0.85)",
+        backdropFilter: "blur(24px)",
+        border: "1px solid rgba(239, 68, 68, 0.3)",
+      }}
     >
       <div className="flex items-start gap-4">
-        <div className="w-10 h-10 rounded-lg bg-red-500/15 flex items-center justify-center flex-shrink-0">
-          <span className="text-red-400 text-xl">!</span>
+        <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
+          <span className="text-red-400 text-xl font-bold">!</span>
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-display font-semibold text-red-300 mb-1">
-            Scan failed
+            {isTimeout ? "Backend is waking up" : "Scan failed"}
           </p>
           <p className="text-xs text-red-400/80 font-mono break-all mb-3">
             {message}
           </p>
-          <p className="text-xs text-[var(--fg-muted)]">
-            Make sure the URL is a valid Reddit, YouTube, or Amazon link and
-            the backend is running.
-          </p>
+          {isTimeout || isNetwork ? (
+            <div className="text-xs text-white/70 leading-relaxed">
+              <p className="mb-1">
+                <span className="text-white font-medium">First scan slow?</span>{" "}
+                Render&apos;s free tier puts the backend to sleep after 15 minutes
+                of inactivity. The first request after wake-up takes ~30–50s.
+              </p>
+              <p className="text-white/50">
+                <span className="text-emerald-400">Tip:</span> hit{" "}
+                <span className="font-mono">Scan</span> again — the second scan
+                will be instant.
+              </p>
+            </div>
+          ) : (
+            <p className="text-xs text-white/60">
+              Make sure the URL is a valid Reddit, YouTube, or Amazon link.
+            </p>
+          )}
         </div>
       </div>
     </div>

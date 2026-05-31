@@ -163,7 +163,8 @@ async function request<T>(
 
 /** Check backend liveness (used by the connection indicator). */
 export function checkHealth(): Promise<Result<HealthResponse>> {
-  return request<HealthResponse>("/health", { method: "GET" }, 5_000);
+  // Generous timeout — backend may be cold-starting on Render free tier.
+  return request<HealthResponse>("/health", { method: "GET" }, 60_000);
 }
 
 /** Submit a thread URL to be scanned. */
@@ -181,8 +182,10 @@ export function scanThread(
       method: "POST",
       body: JSON.stringify(body),
     },
-    // Live network fetches can be slow on big threads — extend the timeout.
-    30_000,
+    // Live network fetches can be slow, especially on Render's free tier
+    // where the backend sleeps after 15 min of inactivity and the first
+    // request after wake-up takes ~30-50s. We give it 75s.
+    75_000,
   );
 }
 
@@ -255,10 +258,10 @@ export function runBakeoff(
   if (options.nHuman !== undefined) params.set("n_human", String(options.nHuman));
   if (options.threshold !== undefined) params.set("threshold", String(options.threshold));
   const qs = params.toString();
-  return request<BakeoffResponse>(`/bakeoff${qs ? `?${qs}` : ""}`, { method: "GET" }, 30_000);
+  return request<BakeoffResponse>(`/bakeoff${qs ? `?${qs}` : ""}`, { method: "GET" }, 75_000);
 }
 
 /** Sweep classification thresholds and return the F1-optimal one. */
 export function tuneThreshold(): Promise<Result<ThresholdSweepResponse>> {
-  return request<ThresholdSweepResponse>("/bakeoff/tune", { method: "GET" }, 30_000);
+  return request<ThresholdSweepResponse>("/bakeoff/tune", { method: "GET" }, 75_000);
 }
