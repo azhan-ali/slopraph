@@ -32,6 +32,7 @@ from app.adapters import (
     AdapterParseError,
     AdapterURLError,
     AmazonAdapter,
+    HackerNewsAdapter,
     RedditAdapter,
     YouTubeAdapter,
 )
@@ -95,6 +96,7 @@ ADAPTERS = {
     Platform.REDDIT: RedditAdapter(),
     Platform.YOUTUBE: YouTubeAdapter(),
     Platform.AMAZON: AmazonAdapter(),
+    Platform.HACKERNEWS: HackerNewsAdapter(),
 }
 
 

@@ -19,6 +19,7 @@ from app.adapters.base import (
     AdapterURLError,
     BaseAdapter,
 )
+from app.adapters.hackernews_adapter import HackerNewsAdapter
 from app.adapters.reddit_adapter import RedditAdapter
 from app.adapters.youtube_adapter import YouTubeAdapter
 
@@ -31,4 +32,5 @@ __all__ = [
     "RedditAdapter",
     "YouTubeAdapter",
     "AmazonAdapter",
+    "HackerNewsAdapter",
 ]

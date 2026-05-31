@@ -35,6 +35,11 @@ const EXAMPLES = [
     icon: "▶",
   },
   {
+    label: "Hacker News",
+    url: "https://news.ycombinator.com/item?id=39894820",
+    icon: "🔶",
+  },
+  {
     label: "Amazon product",
     url: "https://www.amazon.com/dp/B0EXAMPLE1",
     icon: "🛒",
@@ -45,6 +50,7 @@ const PLATFORM_STYLES: Record<string, string> = {
   reddit: "bg-orange-500/10 text-orange-300 border-orange-500/30",
   youtube: "bg-red-500/10 text-red-300 border-red-500/30",
   amazon: "bg-yellow-500/10 text-yellow-300 border-yellow-500/30",
+  hackernews: "bg-orange-400/10 text-orange-200 border-orange-400/30",
   unknown: "bg-gray-500/10 text-gray-300 border-gray-500/30",
 };
 

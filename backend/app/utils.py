@@ -35,6 +35,8 @@ def detect_platform(url: str) -> Platform:
         return Platform.YOUTUBE
     if "amazon." in host or host.endswith("amzn.to"):
         return Platform.AMAZON
+    if "ycombinator.com" in host:
+        return Platform.HACKERNEWS
 
     return Platform.UNKNOWN
 

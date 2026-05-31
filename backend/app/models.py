@@ -21,6 +21,7 @@ class Platform(str, Enum):
     REDDIT = "reddit"
     YOUTUBE = "youtube"
     AMAZON = "amazon"
+    HACKERNEWS = "hackernews"
     UNKNOWN = "unknown"
 
 
