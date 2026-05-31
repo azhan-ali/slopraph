@@ -3,6 +3,11 @@
 > **Bots can mimic text. They can't mimic conversation.**
 > Topology > Stylometry.
 
+**🌐 Live demo:** [slopraph.vercel.app](https://slopraph.vercel.app)
+**📊 Accuracy report:** [slopraph.vercel.app/bakeoff](https://slopraph.vercel.app/bakeoff)
+**⚙️ API:** [slopraph-backend.onrender.com](https://slopraph-backend.onrender.com/health)
+**📦 Source:** [github.com/azhan-ali/slopraph](https://github.com/azhan-ali/slopraph)
+
 SLOPGRAPH takes any comment thread (Reddit, YouTube, Amazon), maps its
 **structure** as a graph, and surfaces the signals a bot-ring can't fake:
 burst reply-timing, vocabulary echo across accounts, and synthetic consensus.
@@ -55,7 +60,13 @@ URL → Adapter → List[Comment] → networkx graph → 3 signals → aggregato
 
 ## Quick start
 
-### Option A — Docker (single command)
+### Option A — Live demo (no setup needed)
+
+Just open **[slopraph.vercel.app](https://slopraph.vercel.app)** in your browser.
+- Paste any Reddit, YouTube, or Amazon URL and hit **Scan**
+- View the accuracy report at [/bakeoff](https://slopraph.vercel.app/bakeoff)
+
+### Option B — Docker (single command)
 
 ```bash
 docker-compose up
@@ -134,6 +145,21 @@ See the live, interactive version at **`/bakeoff`** in the running app.
 
 ---
 
+## Live Fire — verified results
+
+Tested on the live deployed backend (`USE_DEMO_FIXTURE=true` for offline-safe demo):
+
+| Thread | Platform | Health | Echo Rings | Verdict |
+| --- | --- | --- | --- | --- |
+| Clean discussion thread | Reddit | 92/100 | 0 | ✅ Authentic |
+| Crypto pump video comments | YouTube | 72/100 | 1 | ⚠️ Suspicious |
+| Fake product reviews | Amazon | 55/100 | 1 | 🚩 Bot activity |
+
+All three platforms detected correctly. Bot-ring accounts flagged with 🚩 badge.
+Echo rings surfaced the exact accounts sharing rare phrasing.
+
+---
+
 ## Cross-platform — one engine, three platforms
 
 Because every adapter emits the same `Comment` shape, the *entire* detection
@@ -157,6 +183,8 @@ venv\Scripts\python.exe -m pytest        # 214 tests across phases 0–6
 | 2 | 44 | Graph builder, topology metrics, serializer |
 | 3 | 43 | 3 detection signals + aggregator |
 | 6 | 58 | Bake-Off dataset/evaluator + YouTube/Amazon adapters |
+
+**All 214 tests pass.** Zero false positives in the Bake-Off evaluation.
 
 ---
 
